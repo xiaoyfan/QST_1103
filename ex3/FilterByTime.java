@@ -2,9 +2,11 @@ package No3;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Scanner;
 
 /*
@@ -21,17 +23,29 @@ public class FilterByTime {
 		SimpleDateFormat regularFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date beginDate = regularFormat.parse("2015-12-31 18:00:00");
 		Date endDate = regularFormat.parse("2015-12-31 19:00:00");
-		String filePath = "./access.log";
+		String filePath = "C:/Users/admin/Desktop/access.log";
 		FileInputStream inputStream = new FileInputStream(filePath);
 		Scanner scanner = new Scanner(inputStream, "UTF-8");
 		while (scanner.hasNext()){
 			// 对每行进行处理
 			String line = scanner.nextLine();
 			// 切分获取IP，Time
+			String[] str = line.split(" ");
 			String strIp = null;
 			String strTime = null;
+			String strTime1=null;
 			// 对在时间区间内的数据进行输出
-			System.out.println(strIp + "\t" + strTime);
+			strIp = str[0];
+			strTime = str[3];
+			strTime1 = strTime.substring(1);
+			
+			Date date = new Date();
+			Locale locale = Locale.US; 
+			DateFormat df = new SimpleDateFormat("dd/MMM/yyyy:HH:mm:ss", locale.ENGLISH);
+			date = df.parse(strTime1);
+			if (date.after(beginDate)&&date.before(endDate)){//判断在时间区间内
+				System.out.println(strIp + "\t" + strTime1);				
+			}
 		}
 	}
 	
